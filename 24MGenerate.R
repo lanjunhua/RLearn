@@ -1,9 +1,11 @@
+# generate the R code for pboc 24M generate
+
 msPbocRecall24M <- function(TIMEL_LSTINQ, TIMEL_ISS, RCD_RP24M, TIME_NUM_DQ, monthOffSet){
   if(TIMEL_ISS > TIMEL_LSTINQ - months(monthOffSet)) return(NA)
   if(TIMEL_ISS < TIMEL_LSTINQ - months(monthOffSet)){
     if(monthOffSet < 24){
       
-      remained24MStr <- unlist(strsplit(RCD_RP24M, ""))[1:(24 - monthOffSet)]
+      remained24MStr <- ifelse(is.na(RCD_RP24M), NA, unlist(strsplit(RCD_RP24M, ""))[1:(24 - monthOffSet)])
       
       if(floor(difftime(TIMEL_LSTINQ, TIMEL_ISS, units = 'days')/30) == 24 + monthOffSet){
         TIMEL_SRPRCD24M <- TIMEL_LSTINQ - months(24 + monthOffSet - 1)
@@ -19,7 +21,7 @@ msPbocRecall24M <- function(TIMEL_LSTINQ, TIMEL_ISS, RCD_RP24M, TIME_NUM_DQ, mon
         
         middleStr <- map(mapStratTime, mapEndTime, )
         
-        all24MStr = paste0(frontStr, middleStr, remained24MStr)
+        all24MStr = paste0(na.omit(c(frontStr, middleStr, remained24MStr)), collapse = '')
         return(all24MStr)
       } else if(floor(difftime(TIMEL_LSTINQ, TIMEL_ISS, units = 'days')/30) < 24 + monthOffSet){
         frontStr <- rep('/', 24 + monthOffSet - floor(difftime(TIMEL_LSTINQ, TIMEL_ISS, units = 'days')/30))
@@ -34,7 +36,7 @@ msPbocRecall24M <- function(TIMEL_LSTINQ, TIMEL_ISS, RCD_RP24M, TIME_NUM_DQ, mon
         mapEndTime <- TIMEL_LSTINQ - months(monthOffSet)
         middleStr <- map()
         
-        all24MStr = paste0(frontStr, middleStr, remained24MStr)
+        all24MStr = paste0(na.omit(c(frontStr, middleStr, remained24MStr)), collapse = '')
         return(all24MStr)
       } else if(floor(difftime(TIMEL_LSTINQ,TIMEL_ISS, units = 'days')/30) > 24 + monthOffSet){
         frontStr <- NULL
@@ -49,7 +51,7 @@ msPbocRecall24M <- function(TIMEL_LSTINQ, TIMEL_ISS, RCD_RP24M, TIME_NUM_DQ, mon
         mapEndTime <- TIMEL_LSTINQ - months(monthOffSet)
         middleStr <- map()
         
-        all24MStr = paste0(frontStr, middleStr, remained24MStr)
+        all24MStr = paste0(na.omit(c(frontStr, middleStr, remained24MStr)), collapse = '')
         
       }
     }
